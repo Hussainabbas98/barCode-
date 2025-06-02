@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -65,6 +65,89 @@
     
         <img src="data:image/png;base64,{{DNS2D::getBarcodePNG('https://github.com/Hussainabbas98', 'QRCODE')}}" alt="barcode" />
     
+    </div>
+</body>
+</html> --}}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Barcode Generator</title>
+    <style>
+        .container {
+            border: 1px solid #a1a1a1;
+            padding: 20px;
+            width: 80%;
+            margin: auto;
+            text-align: center;
+        }
+
+        img {
+            margin-top: 20px;
+            padding: 10px;
+        }
+
+        .barCodeimgdiv{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #barcodeImage {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align:center;" class="text-primary">Laravel Barcode Generator Using milon/barcode</h1>
+
+    <div class="container">
+        <form method="POST" action="{{ route('generate.barcode') }}">
+            @csrf
+            <div>
+                <input type="text" name="data" placeholder="Enter text or URL" required style="width: 60%; padding: 10px;">
+            </div>
+            <br>
+            <div>
+                <select name="type" required style="padding: 10px;">
+                    <option value="">-- Select Barcode Type --</option>
+                    <optgroup label="1D Barcodes">
+                        {{-- <option value="C39">Code 39</option> --}}
+                        {{-- <option value="C39+">Code 39+</option> --}}
+                        <option value="C93">Code 93</option>
+                        {{-- <option value="I25">Interleaved 2 of 5</option> --}}
+                        {{-- <option value="POSTNET">POSTNET</option> --}}
+                        {{-- <option value="MSI+">MSI+</option> --}}
+                    </optgroup>
+                    <optgroup label="2D Barcodes">
+                        <option value="QRCODE">QR Code</option>
+                        <option value="PDF417">PDF417</option>
+                    </optgroup>
+                </select>
+            </div>
+            <br>
+            <button type="submit" style="padding: 10px 20px;">Generate</button>
+        </form>
+
+        @if(session('barcode'))
+            <div>
+                <h3>Generated Barcode:</h3>
+                <div class="barCodeimgdiv">
+                <img id="barcodeImage" src="data:image/png;base64,{{ session('barcode') }}" alt="Generated Barcode">
+
+                </div>
+                <br>
+                <a href="data:image/png;base64,{{ session('barcode') }}" download="barcode.png">
+                    <button style="margin-top: 10px; padding: 10px 20px;">Download</button>
+                </a>
+            </div>
+            <script>
+                document.getElementById('barcodeImage').style.display = 'block';
+            </script>
+        @endif
     </div>
 </body>
 </html>
